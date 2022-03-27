@@ -16,3 +16,6 @@ Route::get('/{any?}', function () {
     return view('app');
 });
 
+Route::post('/msg', [\App\Http\Controllers\ChatController::class, 'create']);
+
+Route::post('/privateChannel', [\App\Http\Controllers\PrivateChannelController::class, 'privateChannel']);

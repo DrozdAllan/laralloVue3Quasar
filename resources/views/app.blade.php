@@ -6,7 +6,6 @@
 
     <title>Laravel</title>
 
-
 </head>
 <body>
 <div id="app">

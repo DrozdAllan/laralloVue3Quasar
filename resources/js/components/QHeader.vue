@@ -1,14 +1,15 @@
 <template>
   <q-header elevated class="bg-header text-white">
     <q-toolbar>
-      <q-btn dense flat round icon="menu" class="bg-primary" @click="drawerStore.toggleLeftDrawer"/>
+      <q-btn dense flat round icon="menu" class="lt-md bg-primary" @click="drawerStore.toggleLeftDrawer"/>
 
-      <q-toolbar-title class="text-black">
-        Note : you can use the main channel without logging in, user1 and user2 are available with the password
+      <q-toolbar-title class="text-center text-black text-subtitle2">
+        Note : you can use the main channel without logging in, user1 and user2 are available with
+        the password
         "password" to see users online.
       </q-toolbar-title>
 
-      <q-btn dense flat round icon="menu" class="bg-primary" @click="drawerStore.toggleRightDrawer"/>
+      <q-btn dense flat round icon="menu" class="lt-md bg-primary" @click="drawerStore.toggleRightDrawer"/>
     </q-toolbar>
   </q-header>
 </template>

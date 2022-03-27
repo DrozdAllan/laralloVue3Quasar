@@ -1,47 +1,63 @@
 <template>
-  <div class="zinzin">
-    <h2 class="text-center q-py-3">Main Channel</h2>
+  <h4 class="text-center q-py-3 text-primary text-weight-bold">Main Channel</h4>
 
-<!--    <div v-if="user != null">-->
-<!--      <ul class="q-px-none q-px-lg">-->
-<!--        <li-->
-<!--            v-for="(message, index) in messages"-->
-<!--            :key="index"-->
-<!--            class="q-py-sm"-->
-<!--            :class="message.username === user.name ? 'text-right' : 'text-left'">-->
-<!--          ({{ message.date }})-->
-<!--          <b :class="message.username === user.name ? 'primary&#45;&#45;text' : ''">-->
-<!--            {{ message.username }} </b>-->
-<!--          : {{ message.message }}-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
-<!--    <div v-else>-->
-<!--      <ul class="q-px-none q-px-lg">-->
-<!--        <li-->
-<!--            v-for="(message, index) in messages"-->
-<!--            :key="index"-->
-<!--            class="py-1">-->
-<!--          ({{ message.date }})-->
-<!--          <b> {{ message.username }} </b>-->
-<!--          : {{ message.message }}-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
-    footer input ici
+  <div class="q-pa-md row justify-center">
+    <div style="width: 100%">
+
+      <div v-for="message in messages">
+        <q-chat-message v-if="userStore.user"
+                        :name="message.username"
+                        :text="[message.message]"
+                        :sent="message.username === userStore.user.name"
+                        :stamp="message.date">
+        </q-chat-message>
+        <q-chat-message v-else
+                        name="Anonymous"
+                        :text="[message.message]"
+                        :stamp="message.date">
+        </q-chat-message>
+<!--        TODO: check how the window behave when you have too many messages, add scrollbar and style it if possible -->
+      </div>
+    </div>
   </div>
+
+  <q-page-sticky expand position="bottom">
+    <div class="col-12 q-pa-sm">
+<!--      TODO: try an animation smurf like when sending message -->
+<!--      TODO: check how to change font with quasar https://quasar.dev/style/typography#add-custom-fonts  -->
+      <q-input standout="bg-primary text-white" v-model="messageToSend"
+               label="Enter your message (do not send private data)"
+               @keydown.enter="sendMsg">
+        <template v-slot:after>
+          <q-icon name="send" :color="messageToSend === '' ? undefined : 'primary'" @click="sendMsg"/>
+        </template>
+      </q-input>
+    </div>
+  </q-page-sticky>
 </template>
 
 <script setup>
-// TODO: https://quasar.dev/vue-components/chat#introduction
+import {onMounted, ref} from "vue";
+import {useUserStore} from "../store/user";
+
+const userStore = useUserStore();
+
+const messages = ref([])
+const messageToSend = ref("")
+
+function sendMsg() {
+  if (messageToSend.value !== '') {
+    axios.post("/msg", {
+      message: messageToSend.value,
+    });
+    messageToSend.value = '';
+  }
+}
+
+onMounted(() => {
+  Echo.channel("MainChannel").listen("ChatMessageEvent", (data) => {
+    messages.value.push(data);
+  })
+})
+
 </script>
-
-<style>
-.zinzin {
-  word-break: break-word;
-}
-
-ul {
-  list-style: none;
-}
-</style>

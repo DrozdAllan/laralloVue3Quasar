@@ -1,55 +1,66 @@
 <template>
-  <q-form
-      ref="registerForm"
-      class="q-gutter-md"
+  <transition
+      enter-active-class="animated backInRight"
+      leave-active-class="animated backOutRight faster"
   >
-    <q-input
-        v-model="email"
-        label="Email"
-        type="email"
-        filled
-        lazy-rules="ondemand"
-        :rules="emailRules"
-        @click="hasError = false"
-        @keydown.enter="validateRegister"
-    />
-    <q-input
-        v-model="username"
-        label="Username"
-        filled
-        lazy-rules="ondemand"
-        :rules="usernameRules"
-        @click="hasError = false"
-        @keydown.enter="validateRegister"
-    />
-    <q-input
-        v-model="password"
-        label="Password"
-        filled
-        lazy-rules="ondemand"
-        :rules="passwordRules"
-        @click="hasError = false"
-        @keydown.enter="validateRegister"
-        :type="isPwd ? 'password' : 'text'"
+    <q-form
+        ref="registerForm"
+        class="q-gutter-md q-pa-sm"
+        v-if="drawerStore.registerForm"
     >
-      <template v-slot:append>
-        <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-        />
-      </template>
-    </q-input>
+      <q-input
+          v-model="email"
+          label="Email"
+          type="email"
+          filled
+          lazy-rules="ondemand"
+          :rules="emailRules"
+          @click="hasError = false"
+          @keydown.enter="validateRegister"
+      />
+      <q-input
+          v-model="username"
+          label="Username"
+          filled
+          lazy-rules="ondemand"
+          :rules="usernameRules"
+          @click="hasError = false"
+          @keydown.enter="validateRegister"
+      />
+      <q-input
+          v-model="password"
+          label="Password"
+          filled
+          lazy-rules="ondemand"
+          :rules="passwordRules"
+          @click="hasError = false"
+          @keydown.enter="validateRegister"
+          :type="isPwd ? 'password' : 'text'"
+      >
+        <template v-slot:append>
+          <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+          />
+        </template>
+      </q-input>
 
-    <div class="flex flex-center">
-      <q-btn :disable="hasError" label="Register" color="primary" @click="validateRegister"/>
-    </div>
-  </q-form>
+      <div class="flex flex-center">
+        <q-btn :disable="hasError" label="Register" color="primary" @click="validateRegister"/>
+      </div>
+    </q-form>
+  </transition>
 </template>
 
 <script setup>
 import {ref} from "vue";
+import {useDrawerStore} from "../store/drawer";
 
+import '@quasar/extras/animate/backInRight.css'
+import '@quasar/extras/animate/backOutRight.css'
+
+const drawerStore = useDrawerStore();
 const registerForm = ref(null)
 const hasError = ref(false)
 const email = ref('')
@@ -76,11 +87,25 @@ const passwordRules = [
 async function validateRegister() {
   const success = await registerForm.value.validate();
   if (success) {
-    console.log('form success')
-    // TODO: axios to register
-    email.value = null;
-    username.value = null;
-    password.value = null;
+    axios
+        .post("/register", {
+          email: email.value,
+          name: username.value,
+          password: password.value,
+          password_confirmation: password.value,
+        })
+        .then((Response) => {
+          if (Response.status == 201) {
+            axios
+                .post("/login", {
+                  name: username.value,
+                  password: password.value
+                })
+                .then((Response) => {
+                  location.reload();
+                });
+          }
+        })
   } else {
     console.log('form failure')
     hasError.value = true;

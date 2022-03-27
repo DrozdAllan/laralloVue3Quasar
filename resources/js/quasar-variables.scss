@@ -1,4 +1,6 @@
 @use "../../node_modules/quasar/src/css/index.sass" with (
+$body-font-size : 16px,
+
 $primary : #00796B,
 $secondary: #26A69A,
 $accent: #9C27B0,
@@ -9,3 +11,4 @@ $positive: #21BA45,
 $negative: #C10015,
 $info: #31CCEC,
 $warning: #F2C037);
+

@@ -1,112 +1,121 @@
 <template>
-  <div class="zinzin">
-    <h2 class="text-center primary--text q-py-3">Private channels</h2>
-    <div class="text-center" v-if="messageField">
-      <q-btn small outlined color="error" @click="stopChannel" class="no-uppercase">
+    <h4 class="text-center q-py-3 text-primary text-weight-bold">Private Channels</h4>
+
+    <div v-if="messageField" class="q-pa-md row justify-center text-center">
+      <q-btn @click="stopChannel" color="negative" no-caps>
         Stop listening to {{ channelName }}
       </q-btn>
-    </div>
-    <div v-if="!isConnected" class="text-center">
-      You must be connected to use private channels
-    </div>
-    <div v-else>
-      <div class="row" justify="center">
-        <div class="col text-center" cols="6">
-          <q-form
+      <div style="width: 100%">
 
-              v-if="!messageField"
-              ref="channelForm"
-              v-model="channelValid"
-              lazy-validation
-          >
-            <q-input
-                v-model="channelName"
-                :counter="10"
-                :rules="channelNameRules"
-                label="Select the channel name you want to listen"
-                required
-                @keydown.space.prevent
-                @keydown.enter="validateForm"
-            ></q-input>
-            <q-btn
-                :disabled="!channelValid"
-                large
-                outlined
-                color="primary"
-                class="mr-4"
-                @click="validateForm"
-            >
-              Validate
-            </q-btn>
-          </q-form>
+        <div v-for="message in messages">
+          <q-chat-message v-if="userStore.user"
+                          :name="message.username"
+                          :text="[message.message]"
+                          :sent="message.username === userStore.user.name"
+                          :stamp="message.date">
+          </q-chat-message>
+          <q-chat-message v-else
+                          name="Anonymous"
+                          :text="[message.message]"
+                          :stamp="message.date">
+          </q-chat-message>
         </div>
       </div>
-      <!--      <div v-if="messageField">-->
-      <!--        <v-footer ref="messageField" app color="transparent" height="72" inset>-->
-      <!--          <v-row dense>-->
-      <!--            <v-text-field-->
-      <!--                background-color="grey lighten-3"-->
-      <!--                flat-->
-      <!--                rounded-->
-      <!--                filled-->
-      <!--                v-model="message"-->
-      <!--                append-outer-icon="mdi-send"-->
-      <!--                @click:append-outer="sendMessage"-->
-      <!--                @keydown.enter="sendMessage"-->
-      <!--                :label="'Enter your message to ' + this.channelName + ' (do not send private data)'"-->
-      <!--            ></v-text-field>-->
-      <!--          </v-row>-->
-      <!--        </v-footer>-->
-      <!--        <div>-->
-      <!--          <ul class="q-px-0 q-px-lg">-->
-      <!--            <li-->
-      <!--                v-for="(message, index) in messages"-->
-      <!--                :key="index"-->
-      <!--                class="q-py-1"-->
-      <!--                :class="message.username === user.name ? 'text-right' : 'text-left'">-->
-      <!--              ({{ message.date }})-->
-      <!--              <b v-if="user != null"-->
-      <!--                 :class="message.username === user.name ? 'primary&#45;&#45;text' : ''">-->
-      <!--                {{ message.username }} </b>-->
-      <!--              <b v-else>-->
-      <!--                {{ message.username }}-->
-      <!--              </b>-->
-      <!--              : {{ message.message }}-->
-      <!--            </li>-->
-      <!--          </ul>-->
-      <!--        </div>-->
-      <!--      </div>-->
     </div>
-  </div>
+
+
+    <div v-if="userStore.user" class="row justify-center q-pa-md">
+      <div class="col-6 text-center">
+        <q-form
+            v-if="!messageField"
+            ref="channelForm"
+        >
+          <q-input
+              outlined
+              v-model="channelName"
+              :rules="channelNameRules"
+              label="Select the channel name you want to connect to"
+              @keydown.space.prevent
+              @keydown.enter="validateChannel"
+          ></q-input>
+          <q-btn
+              :disable="!channelValid"
+              color="primary"
+              @click="validateChannel"
+          >
+            Connect
+          </q-btn>
+        </q-form>
+      </div>
+    </div>
+
+
+    <div v-else class="text-center">
+      You must be connected to use private channels
+    </div>
+
+    <q-page-sticky v-if="messageField" expand position="bottom">
+      <div class="col-12 q-pa-sm">
+        <q-input standout="bg-primary text-white" v-model="messageToSend"
+                 label="Enter your message (do not send private data)"
+                 @keydown.enter="sendMessage">
+          <template v-slot:after>
+            <q-icon name="send" :color="messageToSend === '' ? undefined : 'primary'" @click="sendMessage"/>
+          </template>
+        </q-input>
+      </div>
+    </q-page-sticky>
 </template>
 
 <script setup>
 import {ref} from 'vue'
+import {useUserStore} from "../store/user";
 
+const userStore = useUserStore();
+
+const channelForm = ref(null)
 const messages = ref([])
-const channelValid = ref(false)
+const channelValid = ref(true)
 const channelName = ref('')
 const messageField = ref(false)
-const message = ref('')
+const messageToSend = ref("")
 const channelNameRules = [
   value => !!value || "Required.",
+    // TODO: try to do smthg like channelValid.value = false when the rules are invalid
   value => /^[A-z\d]*$/.test(value) || 'Channel name is invalid',
 ];
 
 const isConnected = ref(false)
 
+async function validateChannel() {
+  const success = await channelForm.value.validate();
+  if (success) {
+    messageField.value = true;
+    connectToChannel();
+  }
+}
+
+function sendMessage() {
+  if (messageToSend.value !== '') {
+    axios.post("/privateChannel", {
+      channelName: channelName.value,
+      message: messageToSend.value,
+    })
+    messageToSend.value = '';
+  }
+}
+
+function connectToChannel() {
+  Echo.private(channelName.value).listen("PrivateMessageEvent", (data) => {
+    messages.value.push(data);
+  });
+}
+
+function stopChannel() {
+  Echo.leaveChannel(channelName.value);
+  channelName.value = '';
+  messageField.value = false;
+  messages.value = null;
+}
+
 </script>
-
-<style>
-.zinzin {
-  word-break: break-word;
-}
-
-.no-uppercase {
-  text-transform: unset !important;
-}
-
-ul {
-  list-style: none;
-}
-</style>

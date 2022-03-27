@@ -1,21 +1,28 @@
 <template>
-  <q-drawer show-if-above v-model="drawerStore.leftDrawer" side="left" bordered>
-    <div class="row justify-around q-pa-md">
-      <q-btn push :color="drawerStore.loginForm ? 'primary' : ''"
-             :text-color="drawerStore.loginForm ? '' : 'primary'" class="text-weight-bold"
-             @click="drawerStore.toggleLoginForm">Login
-      </q-btn>
-      <q-btn push :color="drawerStore.registerForm ? 'primary' : ''"
-             :text-color="drawerStore.registerForm ? '' : 'primary'" class="text-weight-bold"
-             @click="drawerStore.toggleRegisterForm">Register
+  <q-drawer show-if-above v-model="drawerStore.leftDrawer" side="left" bordered :width="250" style="overflow: hidden">
+
+    <div v-if="userStore.isConnected" class="row justify-around q-px-md q-pt-lg">
+      <q-btn push text-color="primary" class="text-weight-bold" @click="disconnect">
+        Logout
       </q-btn>
     </div>
-    <div v-if="drawerStore.loginForm" class="q-pa-sm">
-      <LoginForm/>
+    <div v-else class="row justify-around q-px-md q-pt-lg">
+      <q-btn push :color="drawerStore.loginForm ? 'primary' : undefined"
+             :text-color="drawerStore.loginForm ? undefined : 'primary'" class="text-weight-bold"
+             @click="drawerStore.toggleLoginForm">
+        Login
+      </q-btn>
+      <q-btn push :color="drawerStore.registerForm ? 'primary' : undefined"
+             :text-color="drawerStore.registerForm ? undefined : 'primary'" class="text-weight-bold"
+             @click="drawerStore.toggleRegisterForm">
+        Register
+      </q-btn>
     </div>
-    <div v-if="drawerStore.registerForm" class="q-pa-sm">
-      <RegisterForm/>
-    </div>
+
+    <LoginForm/>
+
+    <RegisterForm/>
+
     <q-separator class="q-my-md" size="2px" inset/>
     <div class="q-py-md">
       <q-list>
@@ -40,13 +47,30 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {onMounted} from 'vue'
 import {useDrawerStore} from "../store/drawer";
+import {useUserStore} from "../store/user";
+import RegisterForm from './RegisterForm'
+import LoginForm from './LoginForm'
 
 const drawerStore = useDrawerStore();
+const userStore = useUserStore();
 
-import LoginForm from './LoginForm'
-import RegisterForm from './RegisterForm'
+
+function disconnect() {
+  axios.post('/logout').then(() => {
+        // TODO: clean cookies
+        location.reload();
+      }
+  );
+}
+
+onMounted(() => {
+  axios.get("/sanctum/csrf-cookie").then((response) => {
+    userStore.connectUser();
+  });
+})
+
 
 </script>
 
