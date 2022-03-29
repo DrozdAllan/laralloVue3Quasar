@@ -17,7 +17,6 @@
 import {useDrawerStore} from "../store/drawer";
 
 const drawerStore = useDrawerStore();
-
 </script>
 
 <style>
