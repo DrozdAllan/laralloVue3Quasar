@@ -19,10 +19,11 @@
                               :stamp="message.date">
               </q-chat-message>
               <q-chat-message v-else
-                              name="Anonymous"
+                              :name="message.username"
                               :text="[message.message]"
-                              text-color="black"
-                              bg-color="teal-1"
+                              :sent="message.username !== 'Anonymous'"
+                              :text-color="message.username === 'Anonymous' ? 'black' : 'white'"
+                              :bg-color="message.username === 'Anonymous' ? 'teal-1' : 'primary'"
                               :stamp="message.date">
               </q-chat-message>
             </div>

@@ -1,5 +1,5 @@
 <template>
-  <q-drawer show-if-above v-model="drawerStore.rightDrawer" side="right" bordered class="q-pa-lg text-center">
+  <q-drawer show-if-above v-model="drawerStore.rightDrawer" side="right" bordered :width="250" class="q-pa-lg text-center">
 
     <div v-if="connectedUsers.length">
       There <span v-if="connectedUsers.length === 1"> is </span><span v-else> are </span>
@@ -7,7 +7,7 @@
       user<span v-if="connectedUsers.length > 1">s</span> online
 
       <div v-for="connectedUser in connectedUsers">
-        <span>{{ connectedUser.name }}</span>
+        <span class="text-weight-bold">{{ connectedUser.name }}</span>
       </div>
     </div>
 

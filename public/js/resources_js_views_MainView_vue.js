@@ -162,14 +162,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             /* PROPS */
             , ["name", "text", "sent", "text-color", "bg-color", "stamp"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_q_chat_message, {
               key: 1,
-              name: "Anonymous",
+              name: message.username,
               text: [message.message],
-              "text-color": "black",
-              "bg-color": "teal-1",
+              sent: message.username !== 'Anonymous',
+              "text-color": message.username === 'Anonymous' ? 'black' : 'white',
+              "bg-color": message.username === 'Anonymous' ? 'teal-1' : 'primary',
               stamp: message.date
             }, null, 8
             /* PROPS */
-            , ["text", "stamp"]))]);
+            , ["name", "text", "sent", "text-color", "bg-color", "stamp"]))]);
           }), 256
           /* UNKEYED_FRAGMENT */
           ))])];

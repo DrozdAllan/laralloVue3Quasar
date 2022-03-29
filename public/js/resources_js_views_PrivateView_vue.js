@@ -93,7 +93,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isRubbing.value = true;
       setTimeout(function () {
         isRubbing.value = false;
-      }, 500);
+      }, 1000);
     }
 
     function connectToChannel() {

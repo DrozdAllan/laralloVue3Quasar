@@ -1,7 +1,12 @@
 <template>
-  <q-drawer show-if-above v-model="drawerStore.leftDrawer" side="left" :bordered="$q.screen.gt.md" :width="250" style="overflow: hidden">
+  <q-drawer show-if-above v-model="drawerStore.leftDrawer" side="left" :bordered="$q.screen.gt.sm" :width="250"
+            style="overflow: hidden">
 
-    <div v-if="userStore.user" class="row justify-around q-px-md q-pt-lg">
+    <div v-if="userStore.user" class="row justify-around q-pt-sm ">
+
+      <h6 class="q-ma-sm">
+        Welcome {{ userStore.user.name }}</h6>
+
       <q-btn push text-color="primary" class="text-weight-bold" @click="disconnect">
         Logout
       </q-btn>
