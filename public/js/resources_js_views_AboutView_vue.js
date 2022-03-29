@@ -18,7 +18,7 @@ var _hoisted_1 = {
 };
 
 var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
-  "class": "text-center q-py-3 text-primary text-weight-bold"
+  "class": "text-center q-py-xl text-primary text-weight-bold"
 }, "About this App", -1
 /* HOISTED */
 );
