@@ -1,7 +1,7 @@
 <template>
-  <q-drawer show-if-above v-model="drawerStore.leftDrawer" side="left" bordered :width="250" style="overflow: hidden">
+  <q-drawer show-if-above v-model="drawerStore.leftDrawer" side="left" :bordered="$q.screen.gt.md" :width="250" style="overflow: hidden">
 
-    <div v-if="userStore.isConnected" class="row justify-around q-px-md q-pt-lg">
+    <div v-if="userStore.user" class="row justify-around q-px-md q-pt-lg">
       <q-btn push text-color="primary" class="text-weight-bold" @click="disconnect">
         Logout
       </q-btn>
@@ -59,7 +59,6 @@ const userStore = useUserStore();
 
 function disconnect() {
   axios.post('/logout').then(() => {
-        // TODO: clean cookies
         location.reload();
       }
   );

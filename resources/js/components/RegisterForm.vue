@@ -1,56 +1,56 @@
 <template>
-  <transition
-      enter-active-class="animated backInRight"
-      leave-active-class="animated backOutRight faster"
-  >
-    <q-form
-        ref="registerForm"
-        class="q-gutter-md q-pa-sm"
-        v-if="drawerStore.registerForm"
+    <transition
+        enter-active-class="animated backInRight"
+        leave-active-class="animated backOutRight faster"
     >
-      <q-input
-          v-model="email"
-          label="Email"
-          type="email"
-          filled
-          lazy-rules="ondemand"
-          :rules="emailRules"
-          @click="hasError = false"
-          @keydown.enter="validateRegister"
-      />
-      <q-input
-          v-model="username"
-          label="Username"
-          filled
-          lazy-rules="ondemand"
-          :rules="usernameRules"
-          @click="hasError = false"
-          @keydown.enter="validateRegister"
-      />
-      <q-input
-          v-model="password"
-          label="Password"
-          filled
-          lazy-rules="ondemand"
-          :rules="passwordRules"
-          @click="hasError = false"
-          @keydown.enter="validateRegister"
-          :type="isPwd ? 'password' : 'text'"
+      <q-form
+          ref="registerForm"
+          class="q-pa-md"
+          v-if="drawerStore.registerForm"
       >
-        <template v-slot:append>
-          <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-          />
-        </template>
-      </q-input>
+        <q-input
+            v-model="email"
+            label="Email"
+            type="email"
+            filled
+            lazy-rules="ondemand"
+            :rules="emailRules"
+            @click="hasError = false"
+            @keydown.enter="validateRegister"
+        />
+        <q-input
+            v-model="username"
+            label="Username"
+            filled
+            lazy-rules="ondemand"
+            :rules="usernameRules"
+            @click="hasError = false"
+            @keydown.enter="validateRegister"
+        />
+        <q-input
+            v-model="password"
+            label="Password"
+            filled
+            lazy-rules="ondemand"
+            :rules="passwordRules"
+            @click="hasError = false"
+            @keydown.enter="validateRegister"
+            :type="isPwd ? 'password' : 'text'"
+        >
+          <template v-slot:append>
+            <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
 
-      <div class="flex flex-center">
-        <q-btn :disable="hasError" label="Register" color="primary" @click="validateRegister"/>
-      </div>
-    </q-form>
-  </transition>
+        <div class="flex flex-center">
+          <q-btn :disable="hasError" label="Register" color="primary" @click="validateRegister"/>
+        </div>
+      </q-form>
+    </transition>
 </template>
 
 <script setup>

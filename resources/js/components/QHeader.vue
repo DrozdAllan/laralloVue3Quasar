@@ -1,15 +1,14 @@
 <template>
-  <q-header elevated class="bg-header text-white">
-    <q-toolbar>
-      <q-btn dense flat round icon="menu" class="lt-md bg-primary" @click="drawerStore.toggleLeftDrawer"/>
+  <q-header elevated class="bg-header">
+    <q-toolbar class="justify-center">
+      <q-btn icon="menu" flat round color="primary" class="lt-md" @click="drawerStore.toggleLeftDrawer"/>
 
-      <q-toolbar-title class="text-center text-black text-subtitle2">
+      <div class="text-center text-black" :class="$q.screen.lt.md ? 'text-caption' : 'text-subtitle2'" :style="{'line-height': $q.screen.lt.md ? 1.2 : 'normal'}">
         Note : you can use the main channel without logging in, user1 and user2 are available with
-        the password
-        "password" to see users online.
-      </q-toolbar-title>
+        the password "password" to see users online
+      </div>
 
-      <q-btn dense flat round icon="menu" class="lt-md bg-primary" @click="drawerStore.toggleRightDrawer"/>
+      <q-btn icon="account_circle" flat round color="primary" class="lt-md" @click="drawerStore.toggleRightDrawer"/>
     </q-toolbar>
   </q-header>
 </template>

@@ -10,9 +10,7 @@
 </template>
 
 <script setup>
-import {ref, onBeforeMount, onUpdated} from 'vue'
 import LeftDrawer from './components/LeftDrawer';
 import RightDrawer from './components/RightDrawer';
 import QHeader from './components/QHeader'
-
 </script>

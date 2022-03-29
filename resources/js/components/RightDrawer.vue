@@ -28,7 +28,6 @@ const drawerStore = useDrawerStore();
 const connectedUsers = ref([]);
 
 onMounted(() => {
-  // TODO: transorm the user object to get only id & name
   Echo.join("online")
       .here((users) => (connectedUsers.value = users))
       .joining((user) => connectedUsers.value.push(user))
@@ -37,7 +36,3 @@ onMounted(() => {
 
 
 </script>
-
-
-<style lang="scss" scoped>
-</style>

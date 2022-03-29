@@ -1,22 +1,17 @@
 <template>
     <h4 class="text-center q-py-3 text-primary text-weight-bold">Private Channels</h4>
 
-    <div v-if="messageField" class="q-pa-md row justify-center text-center">
+    <div v-if="messageField" class="q-pa-md row justify-center">
       <q-btn @click="stopChannel" color="negative" no-caps>
         Stop listening to {{ channelName }}
       </q-btn>
       <div style="width: 100%">
 
         <div v-for="message in messages">
-          <q-chat-message v-if="userStore.user"
+          <q-chat-message
                           :name="message.username"
                           :text="[message.message]"
                           :sent="message.username === userStore.user.name"
-                          :stamp="message.date">
-          </q-chat-message>
-          <q-chat-message v-else
-                          name="Anonymous"
-                          :text="[message.message]"
                           :stamp="message.date">
           </q-chat-message>
         </div>
@@ -81,11 +76,8 @@ const messageField = ref(false)
 const messageToSend = ref("")
 const channelNameRules = [
   value => !!value || "Required.",
-    // TODO: try to do smthg like channelValid.value = false when the rules are invalid
   value => /^[A-z\d]*$/.test(value) || 'Channel name is invalid',
 ];
-
-const isConnected = ref(false)
 
 async function validateChannel() {
   const success = await channelForm.value.validate();

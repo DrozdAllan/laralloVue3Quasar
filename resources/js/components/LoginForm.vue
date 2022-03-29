@@ -1,11 +1,12 @@
 <template>
   <transition
+
       enter-active-class="animated backInLeft"
       leave-active-class="animated backOutLeft faster"
   >
     <q-form
         v-if="drawerStore.loginForm"
-        class="q-gutter-md q-pa-sm"
+        class="q-pa-md"
         ref="loginForm"
     >
       <q-input
