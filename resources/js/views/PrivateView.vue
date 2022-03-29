@@ -125,7 +125,7 @@ function activRubbing() {
   isRubbing.value = true
   setTimeout(() => {
     isRubbing.value = false
-  }, 500)
+  }, 1000)
 }
 
 function connectToChannel() {

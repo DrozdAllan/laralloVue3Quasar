@@ -33,6 +33,4 @@ onMounted(() => {
       .joining((user) => connectedUsers.value.push(user))
       .leaving((user) => connectedUsers.value = connectedUsers.value.filter((u) => u.id !== user.id))
 })
-
-
 </script>

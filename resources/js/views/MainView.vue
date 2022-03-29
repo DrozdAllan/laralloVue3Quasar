@@ -21,6 +21,8 @@
               <q-chat-message v-else
                               name="Anonymous"
                               :text="[message.message]"
+                              text-color="black"
+                              bg-color="teal-1"
                               :stamp="message.date">
               </q-chat-message>
             </div>
@@ -76,7 +78,7 @@ function activRubbing() {
   isRubbing.value = true
   setTimeout(() => {
     isRubbing.value = false
-  }, 500)
+  }, 1000)
 }
 
 onMounted(() => {

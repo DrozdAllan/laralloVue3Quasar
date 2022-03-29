@@ -45,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
       isRubbing.value = true;
       setTimeout(function () {
         isRubbing.value = false;
-      }, 500);
+      }, 1000);
     }
 
     (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
@@ -164,6 +164,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
               key: 1,
               name: "Anonymous",
               text: [message.message],
+              "text-color": "black",
+              "bg-color": "teal-1",
               stamp: message.date
             }, null, 8
             /* PROPS */
